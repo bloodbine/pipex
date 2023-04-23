@@ -6,7 +6,7 @@
 /*   By: gpasztor <gpasztor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/19 15:57:18 by gpasztor          #+#    #+#             */
-/*   Updated: 2023/04/23 14:03:58 by gpasztor         ###   ########.fr       */
+/*   Updated: 2023/04/23 15:00:46 by gpasztor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ char	*find_path(char *command, char **envp)
 		free(cmdpath);
 		cmdpath = NULL;
 	}
-	if (paths[i] == NULL || cmdpath == NULL)
+	if (cmdpath == NULL)
 		error("Binary not found");
 	i = -1;
 	while (paths[++i] != NULL)
