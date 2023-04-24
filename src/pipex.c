@@ -6,7 +6,7 @@
 /*   By: gpasztor <gpasztor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/19 10:54:31 by gpasztor          #+#    #+#             */
-/*   Updated: 2023/04/23 15:31:08 by gpasztor         ###   ########.fr       */
+/*   Updated: 2023/04/24 12:54:53 by gpasztor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,6 @@ void	child(char *file, char *rawcmd, char **envp, int fd[2])
 	char	*cmdpath;
 	int		input_fd;
 
-	ft_printf("DEBUG: Entered child.\n");
 	cmdargv = ft_split(rawcmd, ' ');
 	cmdpath = find_path(ft_strjoin("/", cmdargv[0]), envp);
 	input_fd = open(file, O_RDONLY, 0644);
@@ -37,7 +36,6 @@ void	parent(char *file, char *rawcmd, char **envp, int fd[2])
 	char	*cmdpath;
 	int		output_fd;
 
-	ft_printf("DEBUG: Entered parent.\n");
 	cmdargv = ft_split(rawcmd, ' ');
 	cmdpath = find_path(ft_strjoin("/", cmdargv[0]), envp);
 	output_fd = open(file, O_CREAT | O_WRONLY | O_TRUNC, 0644);
@@ -70,6 +68,7 @@ int	main(int argc, char **argv, char **envp)
 		if (status != 0)
 			error("Child process failed.");
 		parent(argv[4], argv[3], envp, fd);
+		return (EXIT_SUCCESS);
 	}
-	return (0);
+	return (EXIT_FAILURE);
 }
