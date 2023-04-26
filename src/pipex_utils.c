@@ -6,18 +6,16 @@
 /*   By: gpasztor <gpasztor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/19 15:57:18 by gpasztor          #+#    #+#             */
-/*   Updated: 2023/04/23 15:00:46 by gpasztor         ###   ########.fr       */
+/*   Updated: 2023/04/26 15:35:08 by gpasztor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/pipex.h"
 
-void	error(char *message)
+void	error(int exitcode)
 {
-	write(2, "Error\n", 7);
-	write(2, message, ft_strlen(message) + 1);
-	write(2, "\n", 2);
-	exit(EXIT_FAILURE);
+	perror("pipex");
+	exit(exitcode);
 }
 
 char	*find_path(char *command, char **envp)
@@ -27,22 +25,20 @@ char	*find_path(char *command, char **envp)
 	int		i;
 
 	i = 0;
-	while (envp[i] != NULL && ft_strncmp(envp[i], "PATH", 4 != 0))
+	while (ft_strncmp(envp[i], "PATH=", 5) != 0)
 		i += 1;
-	if (envp[i] == NULL)
-		error("'PATH' environment variable not found.");
+	if (envp[i] == NULL || envp == NULL)
+		error(11);
 	paths = ft_split(envp[i] + 5, ':');
 	i = -1;
 	while (paths[++i] != NULL)
 	{
 		cmdpath = ft_strjoin(paths[i], command);
-		if (access(cmdpath, F_OK | X_OK) == 0)
+		if (access(cmdpath, F_OK) == 0)
 			break ;
 		free(cmdpath);
 		cmdpath = NULL;
 	}
-	if (cmdpath == NULL)
-		error("Binary not found");
 	i = -1;
 	while (paths[++i] != NULL)
 		free(paths[i]);
