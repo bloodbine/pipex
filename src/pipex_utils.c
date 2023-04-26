@@ -6,15 +6,15 @@
 /*   By: gpasztor <gpasztor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/19 15:57:18 by gpasztor          #+#    #+#             */
-/*   Updated: 2023/04/26 15:35:08 by gpasztor         ###   ########.fr       */
+/*   Updated: 2023/04/26 15:54:40 by gpasztor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/pipex.h"
 
-void	error(int exitcode)
+void	error(char *message, int exitcode)
 {
-	perror("pipex");
+	perror(message);
 	exit(exitcode);
 }
 
@@ -27,8 +27,6 @@ char	*find_path(char *command, char **envp)
 	i = 0;
 	while (ft_strncmp(envp[i], "PATH=", 5) != 0)
 		i += 1;
-	if (envp[i] == NULL || envp == NULL)
-		error(11);
 	paths = ft_split(envp[i] + 5, ':');
 	i = -1;
 	while (paths[++i] != NULL)
