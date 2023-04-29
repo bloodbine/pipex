@@ -6,7 +6,7 @@
 /*   By: gpasztor <gpasztor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/19 15:57:18 by gpasztor          #+#    #+#             */
-/*   Updated: 2023/04/29 15:06:22 by gpasztor         ###   ########.fr       */
+/*   Updated: 2023/04/29 16:40:03 by gpasztor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 void	error(char *message, int exitcode)
 {
-	perror(message);
+	ft_fprintf()
 	exit(exitcode);
 }
 
