@@ -6,7 +6,7 @@
 /*   By: gpasztor <gpasztor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/19 11:33:42 by gpasztor          #+#    #+#             */
-/*   Updated: 2023/04/29 15:36:08 by gpasztor         ###   ########.fr       */
+/*   Updated: 2023/04/29 18:18:25 by gpasztor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,11 +14,13 @@
 # define PIPEX_H
 # include <unistd.h>
 # include <stdio.h>
+# include <string.h>
 # include <fcntl.h>
 # include <errno.h>
 # include "libft/libft.h"
 
 void	error(char *message, int exitcode);
+void	error2(char *message, int exitcode);
 char	*find_path(char *command, char **envp);
 
 #endif
