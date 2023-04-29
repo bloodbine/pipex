@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pipex.c                                            :+:      :+:    :+:   */
+/*   pipex_bonus.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: gpasztor <gpasztor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/19 10:54:31 by gpasztor          #+#    #+#             */
-/*   Updated: 2023/04/29 13:48:18 by gpasztor         ###   ########.fr       */
+/*   Updated: 2023/04/29 16:20:39 by gpasztor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,17 @@ void	child(char *file, char *rawcmd, char **envp, int fd[2])
 	int		input_fd;
 
 	cmdargv = ft_split(rawcmd, ' ');
-	cmdpath = find_path(ft_strjoin("/", cmdargv[0]), envp);
+	if (ft_strncmp(cmdargv[0], "./", 2) == 0)
+	{
+		cmdargv[0] += 2;
+		cmdpath = cmdargv[0];
+	}
+	else if (ft_strchr(cmdargv[0], '/'))
+		cmdpath = cmdargv[0];
+	else
+		cmdpath = find_path(ft_strjoin("/", cmdargv[0]), envp);
+	if (access(cmdpath, X_OK) != 0)
+		error("pipex", 13);
 	input_fd = open(file, O_RDONLY, 0644);
 	if (input_fd == -1)
 		error("pipex: input", errno);
@@ -37,7 +47,15 @@ void	parent(char *file, char *rawcmd, char **envp, int fd[2])
 	int		output_fd;
 
 	cmdargv = ft_split(rawcmd, ' ');
-	cmdpath = find_path(ft_strjoin("/", cmdargv[0]), envp);
+	if (ft_strncmp(cmdargv[0], "./", 2) == 0)
+	{
+		cmdargv[0] += 2;
+		cmdpath = cmdargv[0];
+	}
+	else if (ft_strchr(cmdargv[0], '/'))
+		cmdpath = cmdargv[0];
+	else
+		cmdpath = find_path(ft_strjoin("/", cmdargv[0]), envp);
 	output_fd = open(file, O_CREAT | O_WRONLY | O_TRUNC, 0644);
 	if (output_fd == -1)
 		error("pipex: output", errno);
