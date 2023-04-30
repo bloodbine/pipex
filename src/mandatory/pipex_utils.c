@@ -6,7 +6,7 @@
 /*   By: gpasztor <gpasztor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/19 15:57:18 by gpasztor          #+#    #+#             */
-/*   Updated: 2023/04/29 18:17:10 by gpasztor         ###   ########.fr       */
+/*   Updated: 2023/04/30 13:37:26 by gpasztor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,8 @@
 
 void	error2(char *message, int exitcode)
 {
-	ft_fprintf(2, "%s\n", message);
+	ft_fprintf(2, "pipex: %s\n", message);
+	free(message);
 	exit(exitcode);
 }
 

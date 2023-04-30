@@ -6,15 +6,22 @@
 /*   By: gpasztor <gpasztor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/19 15:57:18 by gpasztor          #+#    #+#             */
-/*   Updated: 2023/04/29 16:18:24 by gpasztor         ###   ########.fr       */
+/*   Updated: 2023/04/30 13:40:08 by gpasztor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/pipex.h"
 
+void	error2(char *message, int exitcode)
+{
+	ft_fprintf(2, "pipex: %s\n", message);
+	free(message);
+	exit(exitcode);
+}
+
 void	error(char *message, int exitcode)
 {
-	perror(message);
+	ft_fprintf(2, "%s: %s\n", message, strerror(exitcode));
 	exit(exitcode);
 }
 

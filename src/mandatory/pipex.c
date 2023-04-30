@@ -6,7 +6,7 @@
 /*   By: gpasztor <gpasztor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/19 10:54:31 by gpasztor          #+#    #+#             */
-/*   Updated: 2023/04/29 18:18:33 by gpasztor         ###   ########.fr       */
+/*   Updated: 2023/04/30 13:36:15 by gpasztor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,9 +41,9 @@ void	child(char *file, char *rawcmd, char **envp, int fd[2])
 	dup2(fd[1], STDOUT_FILENO);
 	close(fd[0]);
 	if (access(cmdpath, F_OK) != 0)
-		error2("pipex: command not found", 127);
+		error2(ft_strjoin(cmdargv[0], ": command not found"), 127);
 	if (access(cmdpath, X_OK) != 0)
-		error2("pipex: permission denied", errno);
+		error2(ft_strjoin(cmdargv[0], ": permission denied"), errno);
 	execve(cmdpath, cmdargv, envp);
 }
 
@@ -61,9 +61,9 @@ void	parent(char *file, char *rawcmd, char **envp, int fd[2])
 	dup2(output_fd, STDOUT_FILENO);
 	close(fd[1]);
 	if (access(cmdpath, F_OK) != 0)
-		error2("pipex: command not found", 127);
+		error2(ft_strjoin(cmdargv[0], ": command not found"), 127);
 	if (access(cmdpath, X_OK) != 0)
-		error2("pipex: permission denied", errno);
+		error2(ft_strjoin(cmdargv[0], ": permission denied"), errno);
 	execve(cmdpath, cmdargv, envp);
 }
 
