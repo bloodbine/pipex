@@ -6,11 +6,11 @@
 /*   By: gpasztor <gpasztor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/19 15:57:18 by gpasztor          #+#    #+#             */
-/*   Updated: 2023/04/30 13:40:08 by gpasztor         ###   ########.fr       */
+/*   Updated: 2023/05/01 11:49:57 by gpasztor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/pipex.h"
+#include "../../includes/pipex_bonus.h"
 
 void	error2(char *message, int exitcode)
 {
@@ -48,4 +48,19 @@ char	*find_path(char *command, char **envp)
 	while (paths[++i] != NULL)
 		free(paths[i]);
 	return (free(paths), free(command), cmdpath);
+}
+
+void	config_cmdpath(char ***cmdargv, char **cmdpath, char *raw, char *envp[])
+{
+	if ((ft_strncmp(raw, "./", 2)) == 0)
+	{
+		*cmdargv = ft_split(raw + 2, ' ');
+		*cmdpath = *(cmdargv[0]);
+		return ;
+	}
+	*cmdargv = ft_split(raw, ' ');
+	if (ft_strchr(*cmdargv[0], '/'))
+		*cmdpath = *(cmdargv[0]);
+	else
+		*cmdpath = find_path(ft_strjoin("/", *cmdargv[0]), envp);
 }
