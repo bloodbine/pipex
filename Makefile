@@ -1,5 +1,5 @@
 NAME		= pipex
-BONUSNAME	= pipex_bonus
+BONUSNAME	= pipex
 
 OBJDIR	= obj/
 MANDODIR	= src/mandatory/

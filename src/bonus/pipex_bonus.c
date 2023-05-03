@@ -6,7 +6,7 @@
 /*   By: gpasztor <gpasztor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/19 10:54:31 by gpasztor          #+#    #+#             */
-/*   Updated: 2023/05/02 15:28:18 by gpasztor         ###   ########.fr       */
+/*   Updated: 2023/05/03 13:25:35 by gpasztor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,6 @@ void	children(char *rawcmd, char **envp)
 	}
 	close(fd[1]);
 	dup2(fd[0], STDIN_FILENO);
-	waitpid(process, NULL, 0);
 }
 
 void	last_cmd(char *rawcmd, char **envp, int outfd)
@@ -45,6 +44,7 @@ void	last_cmd(char *rawcmd, char **envp, int outfd)
 	pid_t	process;
 	char	**cmdargv;
 	char	*cmdpath;
+	int		status;
 
 	process = fork();
 	if (process == -1)
@@ -60,12 +60,11 @@ void	last_cmd(char *rawcmd, char **envp, int outfd)
 			error2(ft_strjoin(cmdargv[0], ": permission denied"), errno);
 		execve(cmdpath, cmdargv, envp);
 	}
-	else
-	{
-		close(STDIN_FILENO);
-		close(outfd);
-		waitpid(process, NULL, 0);
-	}
+	close(STDIN_FILENO);
+	close(outfd);
+	waitpid(process, &status, 0);
+	if (WIFEXITED(status))
+		exit(WEXITSTATUS(status));
 }
 
 int	main(int argc, char **argv, char **envp)
