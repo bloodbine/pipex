@@ -6,21 +6,27 @@
 /*   By: gpasztor <gpasztor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/19 10:54:31 by gpasztor          #+#    #+#             */
-/*   Updated: 2023/05/03 15:44:58 by gpasztor         ###   ########.fr       */
+/*   Updated: 2023/05/03 17:14:47 by gpasztor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/pipex_bonus.h"
 
-void	here_doc_loop(int tempfd, int filefd, char *delim)
+void	here_doc_loop(int tempfd, char *delim)
 {
 	char	*line;
 
 	line = NULL;
 	while (1)
 	{
-		line = get_next_line(filefd);
-		if (line == NULL || ft_strncmp(line, delim, ft_strlen(delim)) == 0)
+		ft_fprintf(STDIN_FILENO, "> ");
+		line = get_next_line(STDIN_FILENO);
+		if (line == NULL)
+		{
+			ft_fprintf(STDIN_FILENO, "\n");
+			return ;
+		}
+		if (ft_strncmp(line, delim, ft_strlen(delim)) == 0)
 			break ;
 		ft_fprintf(tempfd, "%s", line);
 		free(line);
@@ -29,18 +35,12 @@ void	here_doc_loop(int tempfd, int filefd, char *delim)
 		free(line);
 }
 
-void	here_doc(char *file, char *delim)
+void	here_doc(char *delim)
 {
-	int		filefd;
 	int		tempfd;
 
-	filefd = open(file, O_RDONLY, 0644);
-	if (filefd == -1)
-		error("pipex: input", errno);
 	tempfd = open(".heredoc0.XXXXXX", O_WRONLY | O_CREAT | O_TRUNC, 0644);
-	dup2(filefd, STDIN_FILENO);
-	here_doc_loop(tempfd, filefd, delim);
-	close(filefd);
+	here_doc_loop(tempfd, delim);
 	close(tempfd);
 	tempfd = open(".heredoc0.XXXXXX", O_RDONLY, 0644);
 	dup2(tempfd, STDIN_FILENO);
@@ -112,9 +112,9 @@ int	main(int argc, char **argv, char **envp)
 	{
 		if (ft_strncmp(argv[1], "here_doc", 8) == 0)
 		{
-			cmdi = 4;
+			cmdi = 3;
 			outfile = open(argv[argc - 1], O_WRONLY | O_CREAT | O_APPEND, 0644);
-			here_doc(argv[2], argv[3]);
+			here_doc(argv[2]);
 		}
 		else
 		{
