@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pipex_bonus.c                                      :+:      :+:    :+:   */
+/*   pipex.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: gpasztor <gpasztor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/19 10:54:31 by gpasztor          #+#    #+#             */
-/*   Updated: 2023/05/03 17:14:47 by gpasztor         ###   ########.fr       */
+/*   Updated: 2023/05/05 12:08:54 by gpasztor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/pipex_bonus.h"
+#include "../includes/pipex.h"
 
 void	here_doc_loop(int tempfd, char *delim)
 {
@@ -63,7 +63,7 @@ void	children(char *rawcmd, char **envp)
 	{
 		close(fd[0]);
 		dup2(fd[1], STDOUT_FILENO);
-		config_cmdpath(&cmdargv, &cmdpath, rawcmd, envp);
+		cfg_cmdpath(&cmdargv, &cmdpath, rawcmd, envp);
 		if (access(cmdpath, F_OK) != 0)
 			error2(ft_strjoin(cmdargv[0], ": command not found"), 127);
 		if (access(cmdpath, X_OK) != 0)
@@ -88,7 +88,7 @@ void	last_cmd(char *rawcmd, char **envp, int outfd)
 	{
 		dup2(outfd, STDOUT_FILENO);
 		close(outfd);
-		config_cmdpath(&cmdargv, &cmdpath, rawcmd, envp);
+		cfg_cmdpath(&cmdargv, &cmdpath, rawcmd, envp);
 		if (access(cmdpath, F_OK) != 0)
 			error2(ft_strjoin(cmdargv[0], ": command not found"), 127);
 		if (access(cmdpath, X_OK) != 0)

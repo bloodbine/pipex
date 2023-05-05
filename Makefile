@@ -1,18 +1,12 @@
 NAME		= pipex
-BONUSNAME	= pipex
 
 OBJDIR	= obj/
-MANDODIR	= src/mandatory/
-BONUSDIR	= src/bonus/
+MANDODIR	= src/
 
 SRC		=	pipex_utils.c \
 			pipex.c
 
-BONUS 	=	pipex_utils_bonus.c \
-			pipex_bonus.c
-
 SRCOBJ	= $(patsubst %.c, $(OBJDIR)%.o, $(SRC))
-BONUSOBJ = $(patsubst %.c, $(OBJDIR)%.o, $(BONUS))
 
 CC		= cc
 RM		= rm -f
@@ -26,15 +20,8 @@ $(OBJDIR)%.o: $(MANDODIR)%.c
 	mkdir -p $(OBJDIR)
 	$(CC) $(CFLAGS) -c $< -o $@
 
-$(OBJDIR)%.o: $(BONUSDIR)%.c
-	mkdir -p $(OBJDIR)
-	$(CC) $(CFLAGS) -c $< -o $@
-
 $(NAME): libmake $(SRCOBJ)
 	$(CC) $(SRCOBJ) $(CAFLAGS) -o $(NAME)
-
-bonus: libmake $(BONUSOBJ)
-	$(CC) $(BONUSOBJ) $(CAFLAGS) -o $(BONUSNAME)
 
 libmake:
 	git submodule update --init --recursive --remote
@@ -48,7 +35,6 @@ clean:
 
 fclean: clean
 	$(RM) $(NAME)
-	$(RM) $(BONUSNAME)
 	$(MAKE) fclean -C includes/libft
 
 re: fclean all
