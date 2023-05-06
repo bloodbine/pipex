@@ -6,7 +6,7 @@
 /*   By: gpasztor <gpasztor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/19 15:57:18 by gpasztor          #+#    #+#             */
-/*   Updated: 2023/05/05 12:08:56 by gpasztor         ###   ########.fr       */
+/*   Updated: 2023/05/06 13:07:32 by gpasztor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,8 @@ char	*find_path(char *command, char **envp)
 
 void	cfg_cmdpath(char ***cmdargv, char **cmdpath, char *raw, char *envp[])
 {
+	if (ft_strlen(raw) == 0)
+		error2(ft_strjoin("", ": command not found"), 127);
 	if ((ft_strncmp(raw, "./", 2)) == 0)
 	{
 		*cmdargv = ft_split(raw + 2, ' ');
@@ -63,4 +65,35 @@ void	cfg_cmdpath(char ***cmdargv, char **cmdpath, char *raw, char *envp[])
 		*cmdpath = *(cmdargv[0]);
 	else
 		*cmdpath = find_path(ft_strjoin("/", *cmdargv[0]), envp);
+	if (access(*cmdpath, F_OK) != 0)
+		error2(ft_strjoin(*cmdargv[0], ": command not found"), 127);
+}
+
+void	open_files(char **argv, int argc, int *infile, int *outfile)
+{
+	if (strncmp(argv[1], "here_doc", 8) == 0)
+	{
+		*outfile = open(argv[argc - 1], O_WRONLY | O_CREAT | O_APPEND, 0644);
+		if (*outfile == -1)
+		{
+			ft_fprintf(2, "pipex: %s: %s\n", strerror(errno), argv[argc - 1]);
+			*outfile = open("/dev/null", O_WRONLY, 0644);
+		}
+	}
+	else
+	{
+		*infile = open(argv[1], O_RDONLY, 0644);
+		if (*infile == -1)
+		{
+			ft_fprintf(2, "pipex: %s: %s\n", strerror(errno), argv[1]);
+			*infile = open("/dev/null", O_RDONLY, 0644);
+		}
+		dup2(*infile, STDIN_FILENO);
+		*outfile = open(argv[argc - 1], O_WRONLY | O_CREAT | O_TRUNC, 0644);
+		if (*outfile == -1)
+		{
+			ft_fprintf(2, "pipex: %s: %s\n", strerror(errno), argv[argc - 1]);
+			*outfile = open("/dev/null", O_WRONLY, 0644);
+		}
+	}
 }

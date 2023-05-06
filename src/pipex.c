@@ -6,7 +6,7 @@
 /*   By: gpasztor <gpasztor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/19 10:54:31 by gpasztor          #+#    #+#             */
-/*   Updated: 2023/05/05 12:08:54 by gpasztor         ###   ########.fr       */
+/*   Updated: 2023/05/06 13:07:49 by gpasztor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,11 +64,8 @@ void	children(char *rawcmd, char **envp)
 		close(fd[0]);
 		dup2(fd[1], STDOUT_FILENO);
 		cfg_cmdpath(&cmdargv, &cmdpath, rawcmd, envp);
-		if (access(cmdpath, F_OK) != 0)
-			error2(ft_strjoin(cmdargv[0], ": command not found"), 127);
-		if (access(cmdpath, X_OK) != 0)
+		if (execve(cmdpath, cmdargv, envp) != 0)
 			error2(ft_strjoin(cmdargv[0], ": permission denied"), errno);
-		execve(cmdpath, cmdargv, envp);
 	}
 	close(fd[1]);
 	dup2(fd[0], STDIN_FILENO);
@@ -81,6 +78,8 @@ void	last_cmd(char *rawcmd, char **envp, int outfd)
 	char	*cmdpath;
 	int		status;
 
+	if (outfd == -1)
+		error("pipex", errno);
 	process = fork();
 	if (process == -1)
 		error("pipex", errno);
@@ -89,11 +88,8 @@ void	last_cmd(char *rawcmd, char **envp, int outfd)
 		dup2(outfd, STDOUT_FILENO);
 		close(outfd);
 		cfg_cmdpath(&cmdargv, &cmdpath, rawcmd, envp);
-		if (access(cmdpath, F_OK) != 0)
-			error2(ft_strjoin(cmdargv[0], ": command not found"), 127);
-		if (access(cmdpath, X_OK) != 0)
+		if (execve(cmdpath, cmdargv, envp) != 0)
 			error2(ft_strjoin(cmdargv[0], ": permission denied"), errno);
-		execve(cmdpath, cmdargv, envp);
 	}
 	close(STDIN_FILENO);
 	close(outfd);
@@ -110,23 +106,17 @@ int	main(int argc, char **argv, char **envp)
 
 	if (argc >= 5)
 	{
+		open_files(argv, argc, &infile, &outfile);
 		if (ft_strncmp(argv[1], "here_doc", 8) == 0)
 		{
 			cmdi = 3;
-			outfile = open(argv[argc - 1], O_WRONLY | O_CREAT | O_APPEND, 0644);
 			here_doc(argv[2]);
 		}
 		else
-		{
 			cmdi = 2;
-			infile = open(argv[1], O_RDONLY, 0644);
-			outfile = open(argv[argc - 1], O_WRONLY | O_CREAT | O_TRUNC, 0644);
-			dup2(infile, STDIN_FILENO);
-		}
 		while (cmdi < argc - 2)
 			children(argv[cmdi++], envp);
-		last_cmd(argv[argc - 2], envp, outfile);
-		return (EXIT_SUCCESS);
+		return (last_cmd(argv[argc - 2], envp, outfile), EXIT_SUCCESS);
 	}
 	return (EXIT_FAILURE);
 }
