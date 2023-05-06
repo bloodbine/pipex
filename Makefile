@@ -23,6 +23,9 @@ $(OBJDIR)%.o: $(MANDODIR)%.c
 $(NAME): libmake $(SRCOBJ)
 	$(CC) $(SRCOBJ) $(CAFLAGS) -o $(NAME)
 
+# bonus: libmake $(SRCOBJ)
+# 	$(CC) $(SRCOBJ) $(CAFLAGS) -o $(NAME)
+
 libmake:
 	git submodule update --init --recursive --remote
 	$(MAKE) -C includes/libft

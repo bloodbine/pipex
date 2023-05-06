@@ -6,7 +6,7 @@
 /*   By: gpasztor <gpasztor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/19 10:54:31 by gpasztor          #+#    #+#             */
-/*   Updated: 2023/05/06 13:07:49 by gpasztor         ###   ########.fr       */
+/*   Updated: 2023/05/06 13:15:35 by gpasztor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,6 +107,8 @@ int	main(int argc, char **argv, char **envp)
 	if (argc >= 5)
 	{
 		open_files(argv, argc, &infile, &outfile);
+		if (outfile == -1)
+			exit(EXIT_FAILURE);
 		if (ft_strncmp(argv[1], "here_doc", 8) == 0)
 		{
 			cmdi = 3;

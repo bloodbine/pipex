@@ -6,7 +6,7 @@
 /*   By: gpasztor <gpasztor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/19 15:57:18 by gpasztor          #+#    #+#             */
-/*   Updated: 2023/05/06 13:07:32 by gpasztor         ###   ########.fr       */
+/*   Updated: 2023/05/06 13:23:05 by gpasztor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,25 +75,19 @@ void	open_files(char **argv, int argc, int *infile, int *outfile)
 	{
 		*outfile = open(argv[argc - 1], O_WRONLY | O_CREAT | O_APPEND, 0644);
 		if (*outfile == -1)
-		{
-			ft_fprintf(2, "pipex: %s: %s\n", strerror(errno), argv[argc - 1]);
-			*outfile = open("/dev/null", O_WRONLY, 0644);
-		}
+			ft_fprintf(2, "pipex: %s: %s\n", argv[argc - 1], strerror(errno));
 	}
 	else
 	{
 		*infile = open(argv[1], O_RDONLY, 0644);
 		if (*infile == -1)
 		{
-			ft_fprintf(2, "pipex: %s: %s\n", strerror(errno), argv[1]);
+			ft_fprintf(2, "pipex: %s: %s\n", argv[1], strerror(errno));
 			*infile = open("/dev/null", O_RDONLY, 0644);
 		}
 		dup2(*infile, STDIN_FILENO);
 		*outfile = open(argv[argc - 1], O_WRONLY | O_CREAT | O_TRUNC, 0644);
 		if (*outfile == -1)
-		{
-			ft_fprintf(2, "pipex: %s: %s\n", strerror(errno), argv[argc - 1]);
-			*outfile = open("/dev/null", O_WRONLY, 0644);
-		}
+			ft_fprintf(2, "pipex: %s: %s\n", argv[argc - 1], strerror(errno));
 	}
 }
